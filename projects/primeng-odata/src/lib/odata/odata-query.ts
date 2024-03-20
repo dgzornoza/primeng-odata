@@ -1,26 +1,22 @@
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { IKeyValue } from 'linq-collections';
-
+import { OdataReturnType } from '../infrastructure';
 import { OdataConfiguration } from './odata-configuration';
-import { OdataReturnType } from './infrastructure';
 import { OdataOperation } from './odata-operation';
-import { OdataPagedResponseModel } from './odata-paged-response-model';
-import { IOdataResponseModel } from './odata-response-model';
+import { OdataPagedResponseModel, OdataResponseModel } from './odata-models';
 
 export class OdataQuery<T> extends OdataOperation<T> {
 
-    private _filter: string;
-    private _top: number;
-    private _skip: number;
-    private _search: string;
+    private _filter: string = '';
+    private _top: number = 0;
+    private _skip: number = 0;
+    private _search: string = '';
     private _orderBy: string[] = [];
     private _apply: string[] = [];
     private _entitiesUri: string;
-    private _maxPerPage: number;
-    private _customQueryOptions: IKeyValue<string, any>[] = [];
+    private _maxPerPage: number = 0;
+    private _customQueryOptions: Record<string, string> = {};
 
     constructor(typeName: string, config: OdataConfiguration, http: HttpClient) {
         super(typeName, config, http);
@@ -28,63 +24,63 @@ export class OdataQuery<T> extends OdataOperation<T> {
         this._entitiesUri = config.getEntitiesUri(this.typeName);
     }
 
-    public Filter(filter: string): OdataQuery<T> {
+    public filter(filter: string): OdataQuery<T> {
         if (filter) {
             this._filter = filter;
         }
         return this;
     }
 
-    public Search(search: string): OdataQuery<T> {
+    public search(search: string): OdataQuery<T> {
         if (search) {
             this._search = search;
         }
         return this;
     }
 
-    public Top(top: number): OdataQuery<T> {
+    public top(top: number): OdataQuery<T> {
         if (top > 0) {
             this._top = top;
         }
         return this;
     }
 
-    public Skip(skip: number): OdataQuery<T> {
+    public skip(skip: number): OdataQuery<T> {
         if (skip > 0) {
             this._skip = skip;
         }
         return this;
     }
 
-    public OrderBy(orderBy: string | string[]): OdataQuery<T> {
+    public orderBy(orderBy: string | string[]): OdataQuery<T> {
         if (orderBy) {
             this._orderBy = this.toStringArray(orderBy);
         }
         return this;
     }
 
-    public MaxPerPage(maxPerPage: number): OdataQuery<T> {
+    public maxPerPage(maxPerPage: number): OdataQuery<T> {
         if (maxPerPage > 0) {
             this._maxPerPage = maxPerPage;
         }
         return this;
     }
 
-    public Apply(apply: string | string[]): OdataQuery<T> {
+    public apply(apply: string | string[]): OdataQuery<T> {
         if (apply) {
             this._apply = this.toStringArray(apply);
         }
         return this;
     }
 
-    public CustomQueryOptions(customOptions: IKeyValue<string, any> | IKeyValue<string, any>[]): OdataQuery<T> {
+    public customQueryOptions(customOptions: Record<string, string>): OdataQuery<T> {
         if (customOptions) {
-            this._customQueryOptions = Array.isArray(customOptions) ? customOptions : [customOptions];
+            this._customQueryOptions = customOptions;
         }
         return this;
     }
 
-    public GetUrl(returnType?: OdataReturnType): string {
+    public getUrl(returnType?: OdataReturnType): string {
         let url: string = this._entitiesUri;
         if (returnType === OdataReturnType.Count) {
             url = `${url}/${this.config.keys.count}`;
@@ -98,10 +94,10 @@ export class OdataQuery<T> extends OdataOperation<T> {
         return url;
     }
 
-    public Exec(): Observable<T[]>;
-    public Exec(returnType: OdataReturnType.Count): Observable<number>;
-    public Exec(returnType: OdataReturnType.PagedResult): Observable<OdataPagedResponseModel<T>>;
-    public Exec(returnType?: OdataReturnType): Observable<T[] | OdataPagedResponseModel<T> | number> {
+    public exec(): Observable<T[]>;
+    public exec(returnType: OdataReturnType.Count): Observable<number>;
+    public exec(returnType: OdataReturnType.PagedResult): Observable<OdataPagedResponseModel<T>>;
+    public exec(returnType?: OdataReturnType): Observable<T[] | OdataPagedResponseModel<T> | number> {
         const requestOptions: {
             headers?: HttpHeaders;
             observe: 'response';
@@ -123,11 +119,11 @@ export class OdataQuery<T> extends OdataOperation<T> {
         }
     }
 
-    public ExecWithCount(): Observable<OdataPagedResponseModel<T>> {
-        return this.Exec(OdataReturnType.PagedResult);
+    public execWithCount(): Observable<OdataPagedResponseModel<T>> {
+        return this.exec(OdataReturnType.PagedResult);
     }
 
-    public NextPage(pagedResult: OdataPagedResponseModel<T>): Observable<OdataPagedResponseModel<T>> {
+    public nextPage(pagedResult: OdataPagedResponseModel<T>): Observable<OdataPagedResponseModel<T>> {
         const requestOptions: {
             headers?: HttpHeaders;
             observe: 'response';
@@ -152,7 +148,7 @@ export class OdataQuery<T> extends OdataOperation<T> {
         return this.http.get<number>(countUrl, requestOptions)
             .pipe(
                 map(res => this.extractDataAsNumber(res, this.config)),
-                catchError((err: any, caught: Observable<number>) => {
+                catchError((err: unknown, caught: Observable<number>) => {
                     if (this.config.handleError) {
                         this.config.handleError(err, caught);
                     }
@@ -169,10 +165,10 @@ export class OdataQuery<T> extends OdataOperation<T> {
         responseType?: 'json';
         withCredentials?: boolean;
     }): Observable<OdataPagedResponseModel<T>> {
-        return this.http.get<IOdataResponseModel<T>>(url, requestOptions)
+        return this.http.get<OdataResponseModel<T>>(url, requestOptions)
             .pipe(
                 map(res => this.extractArrayDataWithCount(res, this.config)),
-                catchError((err: any, caught: Observable<OdataPagedResponseModel<T>>) => {
+                catchError((err: unknown, caught: Observable<OdataPagedResponseModel<T>>) => {
                     if (this.config.handleError) {
                         this.config.handleError(err, caught);
                     }
@@ -189,10 +185,10 @@ export class OdataQuery<T> extends OdataOperation<T> {
         responseType?: 'json';
         withCredentials?: boolean;
     }): Observable<T[]> {
-        return this.http.get<IOdataResponseModel<T>>(this._entitiesUri, requestOptions)
+        return this.http.get<OdataResponseModel<T>>(this._entitiesUri, requestOptions)
             .pipe(
                 map(res => this.extractArrayData(res, this.config)),
-                catchError((err: any, caught: Observable<Array<T>>) => {
+                catchError((err: unknown, caught: Observable<Array<T>>) => {
                     if (this.config.handleError) {
                         this.config.handleError(err, caught);
                     }
@@ -249,14 +245,15 @@ export class OdataQuery<T> extends OdataOperation<T> {
             params = params.append(this.config.keys.apply, this.toCommaString(this._apply));
         }
 
-        if (this._customQueryOptions.length > 0) {
-            this._customQueryOptions.forEach(customQueryOption => (params = params.append(
-                this.checkReservedCustomQueryOptionKey(customQueryOption.key), customQueryOption.value)
-            ));
+        if (this._customQueryOptions) {
+            for (const [key, value] of Object.entries(this._customQueryOptions)) {
+                params = params.append(this.checkReservedCustomQueryOptionKey(key), value);
+            }
         }
 
+        // OData v4 only
         if (odata4) {
-            params = params.append('$count', 'true'); // OData v4 only
+            params = params.append('$count', 'true');
         }
 
         return params;
@@ -266,11 +263,11 @@ export class OdataQuery<T> extends OdataOperation<T> {
         return config.extractQueryResultDataAsNumber(res);
     }
 
-    private extractArrayData(res: HttpResponse<IOdataResponseModel<T>>, config: OdataConfiguration): T[] {
+    private extractArrayData(res: HttpResponse<OdataResponseModel<T>>, config: OdataConfiguration): T[] {
         return config.extractQueryResultData(res);
     }
 
-    private extractArrayDataWithCount(res: HttpResponse<IOdataResponseModel<T>>, config: OdataConfiguration): OdataPagedResponseModel<T> {
+    private extractArrayDataWithCount(res: HttpResponse<OdataResponseModel<T>>, config: OdataConfiguration): OdataPagedResponseModel<T> {
         return config.extractQueryResultDataWithCount(res);
     }
 

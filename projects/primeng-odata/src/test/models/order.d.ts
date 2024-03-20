@@ -1,4 +1,4 @@
-export interface IOrder {
+interface OrderModel {
     OrderID: number;
     CustomerID: string;
     EmployeeID: number;

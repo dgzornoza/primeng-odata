@@ -8,9 +8,9 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { AngularODataModule } from '../src';
 import { ODataConfiguration, ODataServiceFactory } from './../src/index';
-import { IEmployee } from './helpers/employee';
-import { IEmployeeBuilder } from './helpers/employeeBuilder';
-import { HttpHeadersMatcher } from './helpers/httpHeadersMatcher';
+import { EmployeeModel } from './models/employee';
+import { EmployeeBuilder } from './helpers/employee-builder';
+import { HttpHeadersMatcher } from './helpers/http-headers-matcher';
 
 describe('ODataService', () => {
     beforeEach(() => {
@@ -29,7 +29,7 @@ describe('ODataService', () => {
 
     it('Construct via injection', inject([ODataServiceFactory], (factory: ODataServiceFactory) => {
         // Act
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         // Assert
         assert.isNotNull(service);
@@ -37,7 +37,7 @@ describe('ODataService', () => {
 
     it('Get with string key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -54,7 +54,7 @@ describe('ODataService', () => {
 
     it('Get with number key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -71,7 +71,7 @@ describe('ODataService', () => {
 
     it('Get with uuid key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -88,7 +88,7 @@ describe('ODataService', () => {
 
     it('Get with bool key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -105,7 +105,7 @@ describe('ODataService', () => {
 
     it('Get with composite key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -123,8 +123,8 @@ describe('ODataService', () => {
 
     it('Post', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
-        const employee = new IEmployeeBuilder()
+        const service = factory.CreateService<EmployeeModel>('Employees');
+        const employee = new EmployeeBuilder()
             .build();
 
         spyOn(http, 'post').and.returnValue(new Observable<Response>());
@@ -142,8 +142,8 @@ describe('ODataService', () => {
 
     it('Post with expand', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
-        const employee = new IEmployeeBuilder()
+        const service = factory.CreateService<EmployeeModel>('Employees');
+        const employee = new EmployeeBuilder()
             .build();
 
         spyOn(http, 'post').and.returnValue(new Observable<Response>());
@@ -167,8 +167,8 @@ describe('ODataService', () => {
         const config = new ODataConfiguration();
         config.postRequestOptions.headers = config.postRequestOptions.headers.append('Session', 'abc');
 
-        const service = factory.CreateService<IEmployee>('Employees', config);
-        const employee = new IEmployeeBuilder()
+        const service = factory.CreateService<EmployeeModel>('Employees', config);
+        const employee = new EmployeeBuilder()
             .build();
 
         spyOn(http, 'post').and.returnValue(new Observable<Response>());
@@ -184,8 +184,8 @@ describe('ODataService', () => {
 
     it('Patch with string key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
-        const employee = new IEmployeeBuilder()
+        const service = factory.CreateService<EmployeeModel>('Employees');
+        const employee = new EmployeeBuilder()
             .build();
 
         spyOn(http, 'patch').and.returnValue(new Observable<Response>());
@@ -203,7 +203,7 @@ describe('ODataService', () => {
 
     it('Patch with number key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'patch').and.returnValue(new Observable<Response>());
 
@@ -220,8 +220,8 @@ describe('ODataService', () => {
 
     it('Patch with expand', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
-        const employee = new IEmployeeBuilder()
+        const service = factory.CreateService<EmployeeModel>('Employees');
+        const employee = new EmployeeBuilder()
             .build();
 
         spyOn(http, 'patch').and.returnValue(new Observable<Response>());
@@ -242,7 +242,7 @@ describe('ODataService', () => {
 
     it('Delete with string key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'delete').and.returnValue(new Observable<Response>());
 
@@ -268,7 +268,7 @@ describe('ODataService', () => {
 
     it('Delete with number key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'delete').and.returnValue(new Observable<Response>());
 
@@ -285,8 +285,8 @@ describe('ODataService', () => {
 
     it('Put with string key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
-        const employee = new IEmployeeBuilder()
+        const service = factory.CreateService<EmployeeModel>('Employees');
+        const employee = new EmployeeBuilder()
             .build();
 
         spyOn(http, 'put').and.returnValue(new Observable<Response>());
@@ -304,7 +304,7 @@ describe('ODataService', () => {
 
     it('Put with number key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'put').and.returnValue(new Observable<Response>());
 
@@ -321,8 +321,8 @@ describe('ODataService', () => {
 
     it('Put with uuid key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
-        const employee: IEmployee = <IEmployee>{};
+        const service = factory.CreateService<EmployeeModel>('Employees');
+        const employee: EmployeeModel = <EmployeeModel>{};
 
         spyOn(http, 'put').and.returnValue(new Observable<Response>());
 
@@ -339,8 +339,8 @@ describe('ODataService', () => {
 
     it('Put with expand', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
-        const employee = new IEmployeeBuilder()
+        const service = factory.CreateService<EmployeeModel>('Employees');
+        const employee = new EmployeeBuilder()
             .build();
 
         spyOn(http, 'put').and.returnValue(new Observable<Response>());
@@ -361,7 +361,7 @@ describe('ODataService', () => {
 
     it('Query', inject([HttpClient, ODataServiceFactory, ODataConfiguration], (http: HttpClient, factory: ODataServiceFactory, config: ODataConfiguration) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -388,7 +388,7 @@ describe('ODataService', () => {
 
     it('Query and Delete using same service', inject([HttpClient, ODataServiceFactory, ODataConfiguration], (http: HttpClient, factory: ODataServiceFactory, config: ODataConfiguration) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
         spyOn(http, 'delete').and.returnValue(new Observable<Response>());
@@ -426,7 +426,7 @@ describe('ODataService', () => {
 
     it('Custom Action string key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'post').and.returnValue(new Observable<Response>());
 
@@ -440,7 +440,7 @@ describe('ODataService', () => {
 
     it('Custom Action number key', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'post').and.returnValue(new Observable<Response>());
 
@@ -454,7 +454,7 @@ describe('ODataService', () => {
 
     it('Custom Collection Action', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'post').and.returnValue(new Observable<Response>());
 
@@ -468,7 +468,7 @@ describe('ODataService', () => {
 
     it('Custom Function 1', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -482,7 +482,7 @@ describe('ODataService', () => {
 
     it('Custom Function 2', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -496,7 +496,7 @@ describe('ODataService', () => {
 
     it('Custom Function with Parameters', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -510,7 +510,7 @@ describe('ODataService', () => {
 
     it('Custom Collection Function 1', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -524,7 +524,7 @@ describe('ODataService', () => {
 
     it('Custom Collection Function 2', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -538,7 +538,7 @@ describe('ODataService', () => {
 
     it('Custom Collection Function with Parameters', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -552,14 +552,14 @@ describe('ODataService', () => {
 
     it('Item Property', inject([HttpClient, ODataServiceFactory], (http: HttpClient, factory: ODataServiceFactory) => {
         // Assign
-        const service = factory.CreateService<IEmployee>('Employees');
+        const service = factory.CreateService<EmployeeModel>('Employees');
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
         const employId = 'e3527e00-6166-46bb-831f-600fe84cab79';
 
         // Act
-        const result = service.ItemProperty<IEmployee>(employId, 'Name');
+        const result = service.ItemProperty<EmployeeModel>(employId, 'Name');
 
         // Assert
         assert.isNotNull(result);

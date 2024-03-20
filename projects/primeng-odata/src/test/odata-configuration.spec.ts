@@ -5,12 +5,12 @@ import { TestBed } from '@angular/core/testing';
 
 import { AngularODataModule } from '../src';
 import { ODataConfiguration, ODataServiceFactory } from './../src/index';
-import { IEmployee } from './helpers/employee';
+import { EmployeeModel } from './models/employee';
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpResponseEmployeeBuilder } from './helpers/httpResponseEmployeeBuilder';
+import { HttpResponseEmployeeBuilder } from './helpers/http-response-employee-builder';
 
-describe('ODataConfiguration', () => {
+describe('OdataConfiguration', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
@@ -158,7 +158,7 @@ describe('ODataConfiguration', () => {
 
         // Act
         const config = new ODataConfiguration();
-        const results = config.extractQueryResultData<IEmployee>(httpResponse);
+        const results = config.extractQueryResultData<EmployeeModel>(httpResponse);
 
         // Assert
         assert.equal(results.length, 2);
@@ -172,7 +172,7 @@ describe('ODataConfiguration', () => {
 
         // Act
         const config = new ODataConfiguration();
-        const pagedResult = config.extractQueryResultDataWithCount<IEmployee>(httpResponse);
+        const pagedResult = config.extractQueryResultDataWithCount<EmployeeModel>(httpResponse);
 
         // Assert
         assert.equal(pagedResult.count, 3);
@@ -187,7 +187,7 @@ describe('ODataConfiguration', () => {
 
         // Act
         const config = new ODataConfiguration();
-        const pagedResult = config.extractQueryResultDataWithCount<IEmployee>(httpResponse);
+        const pagedResult = config.extractQueryResultDataWithCount<EmployeeModel>(httpResponse);
 
         // Assert
         assert.equal(pagedResult.count, 2);
@@ -202,7 +202,7 @@ describe('ODataConfiguration', () => {
 
         // Act
         const config = new ODataConfiguration();
-        const pagedResult = config.extractQueryResultDataWithCount<IEmployee>(httpResponse);
+        const pagedResult = config.extractQueryResultDataWithCount<EmployeeModel>(httpResponse);
 
         // Assert
         assert.equal(pagedResult.count, 2);
@@ -217,7 +217,7 @@ describe('ODataConfiguration', () => {
 
         // Act
         const config = new ODataConfiguration();
-        const pagedResult = config.extractQueryResultDataWithCount<IEmployee>(httpResponse);
+        const pagedResult = config.extractQueryResultDataWithCount<EmployeeModel>(httpResponse);
 
         // Assert
         assert.equal(pagedResult.nextLink, 'xyz');

@@ -113,9 +113,9 @@ export abstract class OdataOperation<T> {
         return options;
     }
 
-    protected abstract Exec(): Observable<unknown>;
+    protected abstract exec(): Observable<unknown>;
 
-    protected abstract GetUrl(): string;
+    protected abstract getUrl(): string;
 
     protected GenerateUrl(entitiesUri: string): string {
         const params: HttpParams = this.getParams();
@@ -169,8 +169,7 @@ export abstract class OperationWithKey<T> extends OdataOperation<T> {
     constructor(protected override typeName: string,
         protected override config: OdataConfiguration,
         protected override http: HttpClient,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        protected entityKey: any) {
+        protected entityKey: string) {
         super(typeName, config, http);
     }
 
@@ -178,7 +177,7 @@ export abstract class OperationWithKey<T> extends OdataOperation<T> {
         return this.config.getEntityUri(this.entityKey, this.typeName);
     }
 
-    public GetUrl(): string {
+    public getUrl(): string {
         return this.GenerateUrl(this.getEntityUri());
     }
 }
@@ -195,7 +194,7 @@ export abstract class OperationWithEntity<T> extends OdataOperation<T> {
         return this.config.getEntitiesUri(this.typeName);
     }
 
-    public GetUrl(): string {
+    public getUrl(): string {
         return this.GenerateUrl(this.getEntitiesUri());
     }
 }
@@ -215,13 +214,13 @@ export abstract class OperationWithKeyAndEntity<T> extends OperationWithKey<T> {
 }
 
 export class GetOperation<T> extends OperationWithKey<T> {
-    public Exec(): Observable<T> {
+    public exec(): Observable<T> {
         return super.handleResponse(this.http.get<T>(this.getEntityUri(), this.getDefaultRequestOptions()));
     }
 }
 
 export class PostOperation<T> extends OperationWithEntity<T> {
-    public Exec(): Observable<T> {
+    public exec(): Observable<T> {
         const body = this.entity ? JSON.stringify(this.entity) : null;
 
         return super.handleResponse(this.http.post<T>(this.getEntitiesUri(), body, this.getPostRequestOptions()));
@@ -229,7 +228,7 @@ export class PostOperation<T> extends OperationWithEntity<T> {
 }
 
 export class PatchOperation<T> extends OperationWithKeyAndEntity<T> {
-    public Exec(): Observable<T> {
+    public exec(): Observable<T> {
         const body = this.entity ? JSON.stringify(this.entity) : null;
 
         return super.handleResponse(this.http.patch<T>(this.getEntityUri(), body, this.getPostRequestOptions()));
@@ -237,7 +236,7 @@ export class PatchOperation<T> extends OperationWithKeyAndEntity<T> {
 }
 
 export class PutOperation<T> extends OperationWithKeyAndEntity<T> {
-    public Exec(): Observable<T> {
+    public exec(): Observable<T> {
         const body = this.entity ? JSON.stringify(this.entity) : null;
 
         return super.handleResponse(this.http.put<T>(this.getEntityUri(), body, this.getPostRequestOptions()));
@@ -245,7 +244,7 @@ export class PutOperation<T> extends OperationWithKeyAndEntity<T> {
 }
 
 export class DeleteOperation<T> extends OperationWithKey<T>{
-    public Exec(): Observable<T> {
+    public exec(): Observable<T> {
         return super.handleResponse(this.http.delete<T>(this.getEntityUri(), this.config.defaultRequestOptions));
     }
 }

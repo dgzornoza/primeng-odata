@@ -1,37 +1,33 @@
 import { assert } from 'chai';
 import { Observable, of } from 'rxjs';
-
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
+import { HttpHeadersMatcher } from './helpers/http-headers-matcher';
+import { HttpOptionsMatcher } from './helpers/http-options-matcher';
+import { HttpResponseEmployeeBuilder } from './helpers/http-response-employee-builder';
+import { OdataPagedResponseModel, OdataQuery } from '../public-api';
 
-import { AngularODataModule, ODataExecReturnType } from '../src';
-import { ODataConfiguration, ODataPagedResult, ODataQuery, ODataServiceFactory } from './../src/index';
-import { IEmployee } from './helpers/employee';
-import { HttpHeadersMatcher } from './helpers/httpHeadersMatcher';
-import { HttpOptionsMatcher } from './helpers/httpOptionsMatcher';
-import { HttpResponseEmployeeBuilder } from './helpers/httpResponseEmployeeBuilder';
+export class ODataQueryMock extends OdataQuery<EmployeeModel> {
 
-export class ODataQueryMock extends ODataQuery<IEmployee> {
-
-    public Exec(): Observable<IEmployee[]>;
+    public Exec(): Observable<EmployeeModel[]>;
     public Exec(returnType: ODataExecReturnType.Count): Observable<number>;
-    public Exec(returnType: ODataExecReturnType.PagedResult): Observable<ODataPagedResult<IEmployee>>;
-    public Exec(returnType?: ODataExecReturnType): Observable<IEmployee[] | ODataPagedResult<IEmployee> | number> {
+    public Exec(returnType: ODataExecReturnType.PagedResult): Observable<ODataPagedResult<EmployeeModel>>;
+    public Exec(returnType?: ODataExecReturnType): Observable<EmployeeModel[] | ODataPagedResult<EmployeeModel> | number> {
         switch (returnType) {
             case ODataExecReturnType.Count:
                 return of(0);
 
             case ODataExecReturnType.PagedResult:
-                const pagedResult = new ODataPagedResult<IEmployee>();
+                const pagedResult = new OdataPagedResponseModel<EmployeeModel>();
                 pagedResult.count = 0;
-                pagedResult.data = new Array<IEmployee>();
+                pagedResult.data = new Array<EmployeeModel>();
 
                 return of(pagedResult);
 
             default:
-                return of(new Array<IEmployee>());
+                return of(new Array<EmployeeModel>());
         }
     }
 }
@@ -60,7 +56,7 @@ describe('ODataQuery', () => {
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
         // Act
-        const result = new ODataQuery<IEmployee>('Employees', config, http).Exec();
+        const result = new ODataQuery<EmployeeModel>('Employees', config, http).Exec();
 
         // Assert
         assert.isNotNull(result);
@@ -69,7 +65,7 @@ describe('ODataQuery', () => {
 
     it('GetUrl no params', inject([HttpClient, ODataConfiguration], (http: HttpClient, config: ODataConfiguration) => {
         // Assign
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         // Act
         const result = query.GetUrl();
@@ -80,7 +76,7 @@ describe('ODataQuery', () => {
 
     it('GetUrl', inject([HttpClient, ODataConfiguration], (http: HttpClient, config: ODataConfiguration) => {
         // Assign
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         query
             .Filter(`x gt 1 and Boss/Filter eq 42 and EndDate lt 2018-02-07T09:58:30.897Z`)
@@ -100,7 +96,7 @@ describe('ODataQuery', () => {
 
     it('GetUrl with Count', inject([HttpClient, ODataConfiguration], (http: HttpClient, config: ODataConfiguration) => {
         // Assign
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         query
             .Filter(`x gt 1 and Boss/Filter eq 42 and EndDate lt 2018-02-07T09:58:30.897Z`)
@@ -122,7 +118,7 @@ describe('ODataQuery', () => {
         // Assign
         const testHeaders = new HttpHeaders({ 'a': 'b' });
         config.defaultRequestOptions = { headers: testHeaders, observe: 'response' };
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         spyOn(http, 'get').and.returnValue(new Observable<Response>());
 
@@ -167,7 +163,7 @@ describe('ODataQuery', () => {
         // Assign
         const testHeaders = new HttpHeaders({ 'a': 'b' });
         config.defaultRequestOptions = { headers: testHeaders, observe: 'response' };
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         const response = new HttpResponse<number>({
             body: 5,
@@ -215,7 +211,7 @@ describe('ODataQuery', () => {
         // Assign
         const testHeaders = new HttpHeaders({ 'a': 'b' });
         config.defaultRequestOptions = { headers: testHeaders, observe: 'response' };
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         const response = new HttpResponseEmployeeBuilder()
             .build();
@@ -255,7 +251,7 @@ describe('ODataQuery', () => {
         // Assign
         config.defaultRequestOptions.headers = config.defaultRequestOptions.headers.set('a', 'b');
 
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         const response = new HttpResponseEmployeeBuilder()
             .withODataNextLink('http://localhost/odata/Employees?$skip=3"')
@@ -399,7 +395,7 @@ describe('ODataQuery', () => {
 
     it('GetUrl with CustomQueryOptions', inject([HttpClient, ODataConfiguration], (http: HttpClient, config: ODataConfiguration) => {
         // Assign
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         query.CustomQueryOptions([{ key: 'firstName', value: 'Alex' }, { key: 'lastName', value: 'Gates' }]);
 
@@ -412,7 +408,7 @@ describe('ODataQuery', () => {
 
     it('CustomQueryOptions with $ reserved character in key', inject([HttpClient, ODataConfiguration], (http: HttpClient, config: ODataConfiguration) => {
         // Assign
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         query.CustomQueryOptions({ key: '$reserved', value: 'Secret' });
 
@@ -422,7 +418,7 @@ describe('ODataQuery', () => {
 
     it('CustomQueryOptions with @ reserved character in key', inject([HttpClient, ODataConfiguration], (http: HttpClient, config: ODataConfiguration) => {
         // Assign
-        const query = new ODataQuery<IEmployee>('Employees', config, http);
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
         query.CustomQueryOptions({ key: '@reserved', value: 'Secret' });
 
@@ -431,12 +427,12 @@ describe('ODataQuery', () => {
     }));
 
     it('CustomQueryOptions with null key', inject([HttpClient, ODataConfiguration], (http: HttpClient, config: ODataConfiguration) => {
-      // Assign
-      const query = new ODataQuery<IEmployee>('Employees', config, http);
+        // Assign
+        const query = new ODataQuery<EmployeeModel>('Employees', config, http);
 
-      query.CustomQueryOptions({ key: null!, value: 'Secret' });
+        query.CustomQueryOptions({ key: null!, value: 'Secret' });
 
-      // Act & Assert
-      expect(query.GetUrl.bind(query)).toThrowError('Custom query options MUST NOT be null or undefined.');
+        // Act & Assert
+        expect(query.GetUrl.bind(query)).toThrowError('Custom query options MUST NOT be null or undefined.');
     }));
 });

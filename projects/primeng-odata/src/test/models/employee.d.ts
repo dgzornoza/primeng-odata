@@ -1,11 +1,9 @@
-import { IOrder } from './order';
-
-export interface IEmployee {
+interface EmployeeModel {
     EmployeeID: number;
     FirstName: string;
     LastName: string;
     City: string;
     BirthDate?: Date;
-    Boss?: IEmployee;
+    Boss?: EmployeeModel;
     Orders?: IOrder[];
 }

@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { assert } from 'chai';
-import { HttpHeadersMatcher } from './httpHeadersMatcher';
-import { IAsymmetricMatcher } from './jasmineAsymmetricMatcher';
+import { HttpHeadersMatcher } from './http-headers-matcher';
+import { IAsymmetricMatcher } from './jasmine-asymmetric-matcher';
 
 export class HttpOptionsMatcher implements IAsymmetricMatcher {
 

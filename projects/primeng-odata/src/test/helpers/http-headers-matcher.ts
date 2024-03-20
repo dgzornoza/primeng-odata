@@ -1,6 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { assert } from 'chai';
-import { IAsymmetricMatcher } from './jasmineAsymmetricMatcher';
+import { IAsymmetricMatcher } from './jasmine-asymmetric-matcher';
 
 export class HttpHeadersMatcher implements IAsymmetricMatcher {
 
@@ -10,11 +9,15 @@ export class HttpHeadersMatcher implements IAsymmetricMatcher {
     public asymmetricMatch(options: any): boolean {
         const headers: HttpHeaders = options.headers;
 
-        assert.equal(options.observe, 'response');
+        if (options.observe !== 'response') {
+            throw new Error();
+        }
 
         Object.keys(this.check)
             .forEach((key: string) => {
-                assert.equal(headers.get(key), this.check[key], `The header '${key}' does not have the correct value`);
+                if (headers.get(key) !== this.check[key]) {
+                    throw new Error(`The header '${key}' does not have the correct value`);
+                }
             });
 
         return true;

@@ -7,11 +7,11 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { AngularODataModule } from '../src';
 import { ODataConfiguration, ODataOperation, ODataServiceFactory } from './../src/index';
-import { IEmployee } from './helpers/employee';
+import { EmployeeModel } from './models/employee';
 
-export class ODataOperationTest extends ODataOperation<IEmployee> {
-    public Exec(): Observable<Array<IEmployee>> {
-        return of(new Array<IEmployee>());
+export class ODataOperationTest extends ODataOperation<EmployeeModel> {
+    public Exec(): Observable<Array<EmployeeModel>> {
+        return of(new Array<EmployeeModel>());
     }
 
     public GetUrl(): string {
@@ -19,7 +19,7 @@ export class ODataOperationTest extends ODataOperation<IEmployee> {
     }
 }
 
-describe('ODataOperation', () => {
+describe('OdataOperation', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [

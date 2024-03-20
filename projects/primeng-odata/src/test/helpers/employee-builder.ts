@@ -1,7 +1,5 @@
-import { IEmployee } from './employee';
-
-export class IEmployeeBuilder {
-    private _employee: IEmployee;
+export class EmployeeBuilder {
+    private _employee: EmployeeModel;
 
     constructor() {
         this._employee = {
@@ -15,7 +13,7 @@ export class IEmployeeBuilder {
         };
     }
 
-    public build(): IEmployee {
+    public build(): EmployeeModel {
         return this._employee;
     }
 }

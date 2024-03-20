@@ -1,9 +1,9 @@
 import { HttpResponse } from '@angular/common/http';
 import { IODataResponseModel } from '../../src/index';
-import { IEmployee } from './employee';
+import { EmployeeModel } from '../models/employee';
 
 export class HttpResponseEmployeeBuilder {
-    private readonly body: IODataResponseModel<IEmployee>;
+    private readonly body: IODataResponseModel<EmployeeModel>;
     private httpStatus: number;
 
     constructor() {
@@ -55,8 +55,8 @@ export class HttpResponseEmployeeBuilder {
         return this;
     }
 
-    public build(): HttpResponse<IODataResponseModel<IEmployee>> {
-        return new HttpResponse<IODataResponseModel<IEmployee>>({
+    public build(): HttpResponse<IODataResponseModel<EmployeeModel>> {
+        return new HttpResponse<IODataResponseModel<EmployeeModel>>({
             body: this.body,
             status: this.httpStatus
         });

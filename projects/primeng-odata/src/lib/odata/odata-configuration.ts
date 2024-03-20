@@ -1,6 +1,7 @@
 import { HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { OdataUtils } from './odata-utils';
+import { OdataPagedResponseModel, OdataResponseModel } from './odata-models';
 
 export class KeyConfigs {
     public filter = '$filter';
