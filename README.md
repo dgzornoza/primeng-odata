@@ -1,4 +1,4 @@
-# Angular OData Library (es5)
+# PrimeNG Odata UI Library
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/StefH/angular-odata-es5.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/StefH/angular-odata-es5.svg?branch=master)](https://travis-ci.org/StefH/angular-odata-es5)
@@ -6,7 +6,8 @@
 [![npm version](https://badge.fury.io/js/angular-odata-es5.svg)](http://badge.fury.io/js/angular-odata-es5)
 
 ## Demo
-https://StefH.github.io/angular-odata-es5/demo/
+
+<https://StefH.github.io/angular-odata-es5/demo/>
 
 ## Table of contents
 
@@ -24,14 +25,15 @@ Note that this library targets 'es5' so that Uglify will work correctly.
 ## Installation
 
 Install through npm:
+
 ```
-npm install --save angular-odata-es5
+npm install --save primeng-odata
 ```
 
 ## Usage
 
 ``` typescript
-import { ODataConfiguration, ODataServiceFactory, ODataService } from "angular-odata-es5";
+import { ODataConfiguration, ODataServiceFactory, ODataService } from "primeng-odata";
 import { bootstrap } from "@angular/platform/browser";
     
 @Injectable()
@@ -99,6 +101,7 @@ export class NotyListComponent {
 You may also find it useful to view the [demo source](https://github.com/StefH/angular-odata-es5/blob/master/demo/demo.component.ts).
 
 ### Usage without a module bundler
+
 ``` javascript
 <script src="node_modules/angular-odata-es5/bundles/angular-odata-es5.umd.js"></script>
 <script>
@@ -107,17 +110,22 @@ You may also find it useful to view the [demo source](https://github.com/StefH/a
 ```
 
 ## Documentation
+
 All documentation is auto-generated from the source via [compodoc](https://compodoc.github.io/compodoc/) and can be viewed here:
-https://StefH.github.io/angular-odata-es5/docs/
+<https://StefH.github.io/angular-odata-es5/docs/>
 
 ## Development
 
 ### Prepare your environment
-* Install [Node.js](http://nodejs.org/) and NPM (should come with)
-* Install local dev dependencies: `npm install` while current directory is this repo
+
+- Install [Node.js](http://nodejs.org/) and NPM (should come with)
+
+- Install local dev dependencies: `npm install` while current directory is this repo
 
 ### Development server
+
 Run `npm start` to start a development server on port 8000 with auto reload + tests.
 
 ### Testing
+
 Run `npm test` to run tests once or `npm run test:watch` to continually run tests.

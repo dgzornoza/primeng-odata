@@ -1,3 +1,7 @@
 {
-    "vsicons.presets.angular": true
+    "files.exclude": {
+        "node_modules": true,
+        ".angular": true,
+        "dist": true,
+    }
 }
